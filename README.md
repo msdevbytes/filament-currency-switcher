@@ -32,7 +32,25 @@ composer require msdevbytes/filament-currency-switcher
 php artisan currency-switcher:install
 ```
 
-### 3. Run Migrations (if using Spatie settings for the first time)
+### 3. Run these for spatie/laravel-settings:
+
+```bash
+php artisan vendor:publish --provider="Spatie\LaravelSettings\LaravelSettingsServiceProvider" --tag="migrations"
+php artisan migrate
+
+php artisan vendor:publish --provider="Spatie\LaravelSettings\LaravelSettingsServiceProvider" --tag="config"
+```
+
+```bash
+php artisan vendor:publish --provider="Spatie\LaravelSettings\LaravelSettingsServiceProvider" --tag="migrations"
+php artisan migrate
+```
+
+```bash
+php artisan make:settings-migration CurrencySettings
+```
+
+### 4. Run Migrations (if using Spatie settings for the first time)
 
 ```bash
 php artisan vendor:publish --tag=settings-migrations
