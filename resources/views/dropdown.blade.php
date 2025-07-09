@@ -1,6 +1,6 @@
 @php
     $selectedCurrency = session('currency', app(Msdevbytes\CurrencySwitcher\Settings\CurrencySettings::class)->base_currency ?? 'USD');
-    $availableCurrencies = app(Msdevbytes\CurrencySwitcher\Settings\CurrencySettings::class)->supported_currencies ?? ['USD'];
+    $availableCurrencies = app(Msdevbytes\CurrencySwitcher\Settings\CurrencySettings::class)->supported_currencies ?? ['USD', 'SAR'];
 @endphp
 
 <div class="flex items-center gap-2 left-auto">

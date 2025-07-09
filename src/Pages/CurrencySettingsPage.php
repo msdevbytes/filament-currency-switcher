@@ -67,7 +67,13 @@ class CurrencySettingsPage extends Page implements HasForms
                     ->required(),
 
                 Forms\Components\Select::make('base_currency')
-                    ->options(config('currency-switcher.base_currency', ['JPY', 'SAR', 'PKR']))
+                    ->options(function (): array {
+                        $cur = [];
+                        foreach (config('currency-switcher.base_currency', ['USD', 'JPY', 'SAR', 'PKR']) as $value) {
+                            $cur[$value] = $value;
+                        }
+                        return $cur;
+                    })
                     ->native(false)
                     ->required(),
 
@@ -76,7 +82,13 @@ class CurrencySettingsPage extends Page implements HasForms
                     ->searchable()
                     ->native(false)
                     ->multiple()
-                    ->options(config('currency-switcher.supported_currencies', ['USD', 'JPY', 'SAR', 'PKR']))
+                    ->options(function (): array {
+                        $cur = [];
+                        foreach (config('currency-switcher.supported_currencies', ['USD', 'JPY', 'SAR', 'PKR']) as $value) {
+                            $cur[$value] = $value;
+                        }
+                        return $cur;
+                    })
                     ->columns(2)
                     ->required(),
             ])->columns(2)

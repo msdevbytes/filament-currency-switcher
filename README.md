@@ -36,21 +36,34 @@ php artisan currency-switcher:install
 
 ```bash
 php artisan vendor:publish --provider="Spatie\LaravelSettings\LaravelSettingsServiceProvider" --tag="migrations"
-php artisan migrate
 
 php artisan vendor:publish --provider="Spatie\LaravelSettings\LaravelSettingsServiceProvider" --tag="config"
-```
-
-```bash
-php artisan vendor:publish --provider="Spatie\LaravelSettings\LaravelSettingsServiceProvider" --tag="migrations"
-php artisan migrate
 ```
 
 ```bash
 php artisan make:settings-migration CurrencySettings
 ```
 
-### 4. Run Migrations (if using Spatie settings for the first time)
+### 4. Replace the code inside the //database/settings/2025_07_03_130553_currency_settings.php
+
+```
+<?php
+
+use Spatie\LaravelSettings\Migrations\SettingsMigration;
+
+return new class extends SettingsMigration
+{
+    public function up(): void
+    {
+        $this->migrator->add('currency.fixer_api_key', 'api-key');
+        $this->migrator->add('currency.base_currency', 'USD');
+        $this->migrator->add('currency.supported_currencies', config('currency-switcher.supported_currencies'));
+        $this->migrator->add('currency.fixer_is_paid', false);
+    }
+};
+```
+
+### 5. Run Migrations (if using Spatie settings for the first time)
 
 ```bash
 php artisan vendor:publish --tag=settings-migrations

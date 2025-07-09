@@ -3,6 +3,7 @@
 namespace Msdevbytes\CurrencySwitcher;
 
 use Filament\Facades\Filament;
+use Filament\View\PanelsRenderHook;
 use Msdevbytes\CurrencySwitcher\Console\Commands\InstallCurrencySwitcher;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -23,7 +24,7 @@ class CurrencyServiceProvider extends PackageServiceProvider
 
     public function boot(): void
     {
-        Filament::registerRenderHook('panels::user-menu.before', fn() => view('currency-switcher::dropdown'));
+
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'currency-switcher');
 
@@ -43,9 +44,7 @@ class CurrencyServiceProvider extends PackageServiceProvider
             __DIR__ . '/../config/currency-switcher.php' => config_path('currency-switcher.php'),
         ], 'currency-switcher-config');
 
-        Filament::serving(function () {
-            session()->put('available_currencies', config('currency-switcher.available_currencies'));
-        });
+        Filament::registerRenderHook(config('currency-switcher.swicher_position', PanelsRenderHook::GLOBAL_SEARCH_BEFORE), fn() => view('currency-switcher::dropdown'));
     }
 
     public function register(): void
