@@ -18,7 +18,14 @@ class CurrencyRateService
         $settings = app(CurrencySettings::class);
 
         return Cache::remember($this->cacheKey, $this->ttl, function () use ($settings) {
-            $apiKey = $settings->fixer_api_key ?? config('currency-switcher.fixer_api_key', '');
+            $apiKey = $settings->fixer_api_key;
+            if ($apiKey == "") {
+                $apiKey = config('currency-switcher.fixer_api_key', '');
+            }
+            if ($apiKey == "") {
+                Log::error('Fixer API key not set');
+                return [];
+            }
             $symbols = implode(',', $settings->supported_currencies);
 
             $params = [
