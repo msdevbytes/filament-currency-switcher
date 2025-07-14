@@ -36,13 +36,15 @@ class CurrencyEntry extends TextEntry
         parent::setUp();
 
         // Fallback formatting if withOriginal() isn't called
-        $this->state(function ($state) {
+        $this->formatStateUsing(function ($state) {
             if (! is_numeric($state)) return $state;
 
             $currency = session('currency', config('app.currency', 'USD'));
-            $converted = app(CurrencyRateService::class)->convert($state, $currency);
 
-            return (new Currency($converted, $currency))->format();
+            $converted = app(CurrencyRateService::class)->convert($state, $currency);
+            $currency = session('currency', config('app.currency', 'USD'));
+            $cur = new Currency($converted, $currency);
+            return $cur->format();
         });
     }
 }
