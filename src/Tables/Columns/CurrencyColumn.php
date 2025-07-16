@@ -4,6 +4,7 @@ namespace Msdevbytes\CurrencySwitcher\Tables\Columns;
 
 use CodeDistortion\Currency\Currency;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TextColumn\TextColumnSize;
 use Msdevbytes\CurrencySwitcher\Services\CurrencyRateService;
 
 class CurrencyColumn extends TextColumn
@@ -35,16 +36,18 @@ class CurrencyColumn extends TextColumn
     {
         parent::setUp();
 
+        $currency = session('currency', config('app.currency', 'USD'));
         // Default formatter if withOriginal() isn't called
-        $this->formatStateUsing(function ($state) {
+        $this->formatStateUsing(function ($state) use ($currency) {
             if (! is_numeric($state)) return $state;
-
-            $currency = session('currency', config('app.currency', 'USD'));
-
             $converted = app(CurrencyRateService::class)->convert($state, $currency);
-            $currency = session('currency', config('app.currency', 'USD'));
-            $cur = new Currency($converted, $currency);
-            return $cur->format();
+            return $converted;
+        })->icon(function (string $state) use ($currency) {
+            if ($currency === 'SAR') {
+                return 'icon-riyal';
+            } else {
+                return 'bx-dollar';
+            }
         });
     }
 }
