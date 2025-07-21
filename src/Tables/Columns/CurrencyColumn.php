@@ -2,9 +2,7 @@
 
 namespace Msdevbytes\CurrencySwitcher\Tables\Columns;
 
-use CodeDistortion\Currency\Currency;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\TextColumn\TextColumnSize;
 use Msdevbytes\CurrencySwitcher\Services\CurrencyRateService;
 
 class CurrencyColumn extends TextColumn

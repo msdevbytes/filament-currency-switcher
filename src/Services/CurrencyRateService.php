@@ -10,23 +10,21 @@ use Msdevbytes\CurrencySwitcher\Settings\CurrencySettings;
 class CurrencyRateService
 {
     protected string $cacheKey = 'currency_switcher.rates';
-    protected int $ttl = 60 * 60 * 24; // 24 hours
+
 
     public function getRates(): array
     {
         /** @var CurrencySettings $settings */
-        $settings = app(CurrencySettings::class);
+        $ttl = config('currency-switcher.ttl', 60 * 60 * 24);
 
-        return Cache::remember($this->cacheKey, $this->ttl, function () use ($settings) {
-            $apiKey = $settings->fixer_api_key;
+        return Cache::remember($this->cacheKey, $ttl, function () {
+            $apiKey = config('currency-switcher.fixer_access_key', '');
+
             if ($apiKey == "") {
-                $apiKey = config('currency-switcher.fixer_api_key', '');
-            }
-            if ($apiKey == "") {
-                Log::error('Fixer API key not set');
+                Log::error('Fixer API key not set please set FIXER_ACCESS_KEY in your .env file');
                 return [];
             }
-            $symbols = implode(',', $settings->supported_currencies);
+            $symbols = implode(',', config('currency-switcher.supported_currencies', []));
 
             $params = [
                 'access_key' => $apiKey,
@@ -34,8 +32,8 @@ class CurrencyRateService
             ];
 
             // Only include base if the user is on a paid Fixer plan
-            if ($settings->fixer_is_paid && $settings->base_currency) {
-                $params['base'] = $settings->base_currency;
+            if (config('currency-switcher.fixer_is_paid', false) && config('currency-switcher.base_currency', '')) {
+                $params['base'] = config('currency-switcher.base_currency');
             }
 
             $response = Http::get('http://data.fixer.io/api/latest', $params);
@@ -49,18 +47,18 @@ class CurrencyRateService
 
             $rates = $response['rates'];
 
+
             // 🔁 Normalize manually if on free plan with non-EUR base
-            if (! $settings->fixer_is_paid && $settings->base_currency && $settings->base_currency !== 'EUR') {
-                $eurToBase = $rates[$settings->base_currency] ?? 1;
+            if (!config('currency-switcher.fixer_is_paid', false) && config('currency-switcher.base_currency', []) && in_array('EUR', config('currency-switcher.base_currency', []))) {
+                $eurToBase = $rates[config('currency-switcher.base_currency')] ?? 1;
 
                 foreach ($rates as $code => $rate) {
                     $rates[$code] = $rate / $eurToBase;
                 }
 
                 // Manually mark base as 1
-                $rates[$settings->base_currency] = 1;
+                $rates[config('currency-switcher.base_currency')] = 1;
             }
-
             return $rates;
         });
     }
@@ -68,7 +66,6 @@ class CurrencyRateService
     public function convert(float|int $amount, string $toCurrency): float
     {
         $rates = $this->getRates();
-
         return round($amount * ($rates[$toCurrency] ?? 1), 2);
     }
 }
