@@ -32,7 +32,7 @@ class CurrencyRateService
             ];
 
             // Only include base if the user is on a paid Fixer plan
-            if (config('currency-switcher.fixer_is_paid', false) && config('currency-switcher.base_currency', '')) {
+            if (config('currency-switcher.fixer_is_paid', false) && config('currency-switcher.base_currency', 'USD')) {
                 $params['base'] = config('currency-switcher.base_currency');
             }
 
@@ -49,7 +49,7 @@ class CurrencyRateService
 
 
             // 🔁 Normalize manually if on free plan with non-EUR base
-            if (!config('currency-switcher.fixer_is_paid', false) && config('currency-switcher.base_currency', []) && in_array('EUR', config('currency-switcher.base_currency', []))) {
+            if (!config('currency-switcher.fixer_is_paid', false) && config('currency-switcher.base_currency', '') && 'EUR' == config('currency-switcher.base_currency', '')) {
                 $eurToBase = $rates[config('currency-switcher.base_currency')] ?? 1;
 
                 foreach ($rates as $code => $rate) {
@@ -66,6 +66,9 @@ class CurrencyRateService
     public function convert(float|int $amount, string $toCurrency): float
     {
         $rates = $this->getRates();
+        if ($toCurrency == config('currency-switcher.base_currency', 'USD')) {
+            return $amount; // Return original amount if unsupported
+        }
         return round($amount * ($rates[$toCurrency] ?? 1), 2);
     }
 }
