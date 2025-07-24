@@ -5,6 +5,7 @@ namespace Msdevbytes\CurrencySwitcher\Services;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Number;
 use Msdevbytes\CurrencySwitcher\Settings\CurrencySettings;
 
 class CurrencyRateService
@@ -69,6 +70,6 @@ class CurrencyRateService
         if ($toCurrency == config('currency-switcher.base_currency', 'USD')) {
             return $amount; // Return original amount if unsupported
         }
-        return round($amount * ($rates[$toCurrency] ?? 1), 2);
+        return (round($amount * ($rates[$toCurrency] ?? 1), 2));
     }
 }

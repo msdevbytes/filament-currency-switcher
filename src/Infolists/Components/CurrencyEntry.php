@@ -5,6 +5,7 @@ namespace Msdevbytes\CurrencySwitcher\Infolists\Components;
 use Filament\Infolists\Components\TextEntry;
 use Msdevbytes\CurrencySwitcher\Services\CurrencyRateService;
 use CodeDistortion\Currency\Currency;
+use Illuminate\Support\Number;
 
 class CurrencyEntry extends TextEntry
 {
@@ -40,7 +41,7 @@ class CurrencyEntry extends TextEntry
         $this->formatStateUsing(function ($state) use ($currency) {
             if (! is_numeric($state)) return $state;
             $converted = app(CurrencyRateService::class)->convert($state, $currency);
-            return $converted;
+            return Number::format($converted);
         })->icon(function (string $state) use ($currency) {
             if ($currency === 'SAR') {
                 return 'icon-riyal';

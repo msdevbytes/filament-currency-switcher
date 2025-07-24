@@ -3,6 +3,7 @@
 namespace Msdevbytes\CurrencySwitcher\Tables\Columns;
 
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Support\Number;
 use Msdevbytes\CurrencySwitcher\Services\CurrencyRateService;
 
 class CurrencyColumn extends TextColumn
@@ -39,7 +40,7 @@ class CurrencyColumn extends TextColumn
         $this->formatStateUsing(function ($state) use ($currency) {
             if (! is_numeric($state)) return $state;
             $converted = app(CurrencyRateService::class)->convert($state, $currency);
-            return $converted;
+            return Number::format($converted);
         })->icon(function (string $state) use ($currency) {
             if ($currency === 'SAR') {
                 return 'icon-riyal';
