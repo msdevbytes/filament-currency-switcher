@@ -44,7 +44,7 @@ class CurrencyServiceProvider extends PackageServiceProvider
             __DIR__ . '/../config/currency-switcher.php' => config_path('currency-switcher.php'),
         ], 'currency-switcher-config');
 
-        Filament::registerRenderHook(config('currency-switcher.swicher_position', PanelsRenderHook::GLOBAL_SEARCH_BEFORE), fn() => view('currency-switcher::dropdown'));
+        Filament::registerRenderHook(config('currency-switcher.switcher_position', PanelsRenderHook::GLOBAL_SEARCH_BEFORE), fn() => view('currency-switcher::dropdown'));
     }
 
     public function register(): void

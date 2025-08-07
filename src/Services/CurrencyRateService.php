@@ -66,7 +66,14 @@ class CurrencyRateService
 
     public function convert(float|int $amount, string $toCurrency): float
     {
-        $rates = $this->getRates();
+        $rates = [];
+
+        if (config('currency-switcher.use_fixer', false) && !config('currency-switcher.fixer_is_paid', false)) {
+            // Use fixed rates if not using Fixer
+            $rates = config('currency-switcher.fixed_rate', []);
+        } else {
+            $rates = $this->getRates();
+        }
         if ($toCurrency == config('currency-switcher.base_currency', 'USD')) {
             return $amount; // Return original amount if unsupported
         }
