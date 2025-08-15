@@ -2,10 +2,13 @@
 
 namespace Msdevbytes\CurrencySwitcher\Pages;
 
+use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
 use Filament\Forms;
-use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Section;
 use Filament\Pages\Page;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -20,13 +23,13 @@ class CurrencySettingsPage extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
-    protected static ?string $navigationGroup = 'System';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-currency-dollar';
+    protected static string | \UnitEnum | null $navigationGroup = 'System';
     protected static ?string $navigationLabel = 'Currency Settings';
     protected static ?string $slug = 'currency-settings';
 
 
-    protected static string $view = 'currency-switcher::pages.settings';
+    protected string $view = 'currency-switcher::pages.settings';
 
 
     public $fixer_api_key;
@@ -56,17 +59,17 @@ class CurrencySettingsPage extends Page implements HasForms
     {
         return [
             Section::make()->schema([
-                Forms\Components\Toggle::make('fixer_is_paid')
+                Toggle::make('fixer_is_paid')
                     ->label('Using paid Fixer plan?')
                     ->helperText('Enable only if your Fixer account supports setting custom base currencies.')
                     ->default(false),
 
-                Forms\Components\TextInput::make('fixer_api_key')
+                TextInput::make('fixer_api_key')
                     ->label('Fixer API Key')
                     ->helperText(new HtmlString('<a href="https://fixer.io/" target="_blank" class="hover:text-blue-600">fixer.io (Foreign exchange rates and currency conversion api)</a>'))
                     ->required(),
 
-                Forms\Components\Select::make('base_currency')
+                Select::make('base_currency')
                     ->options(function (): array {
                         $cur = [];
                         foreach (config('currency-switcher.base_currency', ['USD', 'JPY', 'SAR', 'PKR']) as $value) {
@@ -77,7 +80,7 @@ class CurrencySettingsPage extends Page implements HasForms
                     ->native(false)
                     ->required(),
 
-                Forms\Components\Select::make('supported_currencies')
+                Select::make('supported_currencies')
                     ->label('Supported Currencies')
                     ->searchable()
                     ->native(false)

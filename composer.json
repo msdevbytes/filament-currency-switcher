@@ -1,14 +1,14 @@
 {
   "name": "msdevbytes/filament-currency-switcher",
-  "description": "A Filament v3 plugin to add a currency switcher with automatic conversion",
+  "description": "A Filament v4 plugin to add a currency switcher with automatic conversion",
   "type": "library",
-  "version": "1.4.6",
+  "version": "1.5.6",
   "license": "MIT",
   "keywords": [
     "Filament",
     "Currency Switcher",
     "Switcher",
-    "Filemtn v3"
+    "Filament v4"
   ],
   "authors": [
     {
@@ -18,8 +18,7 @@
   ],
   "require": {
     "php": "^8.2",
-    "filament/filament": "^3.0",
-    "spatie/laravel-settings": "^3.4",
+    "filament/filament": "^4.0",
     "code-distortion/currency": "^0.5.6",
     "mallardduck/blade-boxicons": "^v2.2.0"
   },
@@ -38,6 +37,6 @@
       ]
     }
   },
-  "minimum-stability": "dev",
+  "minimum-stability": "beta",
   "prefer-stable": true
 }
