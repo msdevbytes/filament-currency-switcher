@@ -2,13 +2,13 @@
   "name": "msdevbytes/filament-currency-switcher",
   "description": "A Filament v3 plugin to add a currency switcher with automatic conversion",
   "type": "library",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "license": "MIT",
   "keywords": [
     "Filament",
     "Currency Switcher",
     "Switcher",
-    "Filemtn v3"
+    "Filament v3"
   ],
   "authors": [
     {
