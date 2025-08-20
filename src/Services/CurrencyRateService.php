@@ -64,8 +64,23 @@ class CurrencyRateService
         });
     }
 
-    public function convert(float|int $amount, string $toCurrency): float
+    // Normalize amount strings like "1,234.56" or "SAR 1 234.56" to float
+    private function normalize(mixed $value): ?float
     {
+        if ($value === null || $value === '') {
+            return 0;
+        }
+        if (is_numeric($value)) {
+            return (float) $value;
+        }
+        $clean = preg_replace('/[^\d.\-]/', '', (string) $value); // keep digits, dot, minus
+        return $clean === '' ? 0 : (float) $clean;
+    }
+
+    public function convert(float|int|string $amount, string $toCurrency): float
+    {
+        $amount = $this->normalize($amount);
+
         $rates = [];
 
         if (config('currency-switcher.use_fixer', false) && !config('currency-switcher.fixer_is_paid', false)) {
