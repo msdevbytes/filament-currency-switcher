@@ -38,7 +38,6 @@ class CurrencyColumn extends TextColumn
         $currency = session('currency', config('app.currency', 'USD'));
         // Default formatter if withOriginal() isn't called
         $this->formatStateUsing(function ($state) use ($currency) {
-            if (! is_numeric($state)) return $state;
             $converted = app(CurrencyRateService::class)->convert($state, $currency);
             return Number::format($converted);
         })->icon(function (string $state) use ($currency) {
