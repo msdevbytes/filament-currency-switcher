@@ -1,6 +1,13 @@
 @php
-    $selectedCurrency = session('currency', app(Msdevbytes\CurrencySwitcher\Settings\CurrencySettings::class)->base_currency ?? 'USD');
-    $availableCurrencies = app(Msdevbytes\CurrencySwitcher\Settings\CurrencySettings::class)->supported_currencies ?? ['USD', 'SAR'];
+    $currencySettings = app(Msdevbytes\CurrencySwitcher\Settings\CurrencySettings::class);
+
+    $baseCurrency = Cache::get(Cache::get('currency_key'), ''); 
+    if (!$baseCurrency) {
+        $baseCurrency = $currencySettings->base_currency ?? 'USD';
+    }
+
+    $selectedCurrency = session('currency', $baseCurrency);
+    $availableCurrencies = $currencySettings->supported_currencies ?? ['USD', 'SAR'];
 @endphp
 
 <div class="flex items-center gap-2 left-auto">
