@@ -1,12 +1,10 @@
 @php
     $currencySettings = app(Msdevbytes\CurrencySwitcher\Settings\CurrencySettings::class);
 
-    $baseCurrency = Cache::get(Cache::get('currency_key'), ''); 
-    if (!$baseCurrency) {
-        $baseCurrency = $currencySettings->base_currency ?? 'USD';
-    }
-
-    $selectedCurrency = session('currency', $baseCurrency);
+    $selectedCurrency = Cache::get(Cache::get('currency_key'), ''); 
+    if (!$selectedCurrency) {
+        $selectedCurrency = session('currency', $currencySettings->default_currency ?? 'USD');
+    }   
     $availableCurrencies = $currencySettings->supported_currencies ?? ['USD', 'SAR'];
 @endphp
 
