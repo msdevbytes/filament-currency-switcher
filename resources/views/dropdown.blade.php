@@ -3,8 +3,10 @@
 
     $selectedCurrency = Cache::get(Cache::get('currency_key'), ''); 
     if (!$selectedCurrency) {
-        $selectedCurrency = session('currency', $currencySettings->default_currency ?? 'USD');
-    }   
+        $selectedCurrency = session('currency', $currencySettings->default_currency ?? 'SAR');
+        Session::put('currency', $selectedCurrency);
+        Cache::set(Cache::get('currency_key'), $selectedCurrency);
+    }     
     $availableCurrencies = $currencySettings->supported_currencies ?? ['USD', 'SAR'];
 @endphp
 
